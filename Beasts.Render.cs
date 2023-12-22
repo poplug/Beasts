@@ -63,7 +63,7 @@ public partial class Beasts
         ImGui.SetNextWindowBgAlpha(0.6f);
         ImGui.Begin("Beasts Window", ImGuiWindowFlags.NoDecoration);
 
-        if (ImGui.BeginTable("Beasts Table", 3, ImGuiTableFlags.RowBg | ImGuiTableFlags.BordersOuter | ImGuiTableFlags.BordersV))
+        if (ImGui.BeginTable("Beasts Table", 2, ImGuiTableFlags.RowBg | ImGuiTableFlags.BordersOuter | ImGuiTableFlags.BordersV))
         {
             ImGui.TableSetupColumn("Price", ImGuiTableColumnFlags.WidthFixed, 48);
             ImGui.TableSetupColumn("Beast");
