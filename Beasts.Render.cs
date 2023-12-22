@@ -51,7 +51,7 @@ public partial class Beasts
             Graphics.DrawFrame(beast.GetClientRect(), Color.White, 2);
             Graphics.DrawText(beastMetadata.DisplayName, center, Color.White, FontAlign.Center);
 
-            var text = Prices[beastMetadata.DisplayName].ToString(CultureInfo.InvariantCulture);
+            var text = Prices[beastMetadata.DisplayName].ToString(CultureInfo.InvariantCulture) + "c";
             var textPos = center + new Vector2(0, 20);
             Graphics.DrawText(text, textPos, Color.White, FontAlign.Center);
         }
