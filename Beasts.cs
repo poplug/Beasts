@@ -29,7 +29,6 @@ public partial class Beasts : BaseSettingsPlugin<BeastsSettings>
 
     public override void AreaChange(AreaInstance area)
     {
-        DebugWindow.LogMsg("AreaChange");
         _trackedBeasts.Clear();
     }
 
@@ -38,7 +37,6 @@ public partial class Beasts : BaseSettingsPlugin<BeastsSettings>
         if (entity.Rarity != MonsterRarity.Rare) return;
         foreach (var _ in BeastsDatabase.AllBeasts.Where(beast => entity.Metadata == beast.Path))
         {
-            DebugWindow.LogMsg($"Entity Added: {entity.Metadata}");
             _trackedBeasts.Add(entity.Id, entity);
         }
     }
@@ -47,7 +45,6 @@ public partial class Beasts : BaseSettingsPlugin<BeastsSettings>
     {
         if (_trackedBeasts.ContainsKey(entity.Id))
         {
-            DebugWindow.LogMsg($"Entity Removed: {entity.Metadata}");
             _trackedBeasts.Remove(entity.Id);
         }
     }
