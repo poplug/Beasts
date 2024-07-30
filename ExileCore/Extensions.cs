@@ -12,7 +12,7 @@ public static class Extensions
                 ?.GetChildAtIndex(0)
                 ?.GetChildAtIndex(1)
                 ?.GetChildAtIndex(1)
-                ?.GetChildAtIndex(62).Address ?? 0
+                ?.GetChildAtIndex(64).Address ?? 0
         );
     }
 }
