@@ -15,6 +15,7 @@ public partial class Beasts : BaseSettingsPlugin<BeastsSettings>
 {
     private Dictionary<BeastDisplayName, float> Prices { get; set; }
     private readonly Dictionary<long, Entity> _trackedBeasts = new();
+    private readonly Dictionary<long, Entity> _trackedHarvestMemoryBeasts = new();
 
     public override bool Initialise()
     {
@@ -30,6 +31,7 @@ public partial class Beasts : BaseSettingsPlugin<BeastsSettings>
     public override void AreaChange(AreaInstance area)
     {
         _trackedBeasts.Clear();
+        _trackedHarvestMemoryBeasts.Clear();
     }
 
     public override void EntityAdded(Entity entity)
@@ -39,6 +41,11 @@ public partial class Beasts : BaseSettingsPlugin<BeastsSettings>
         {
             _trackedBeasts.Add(entity.Id, entity);
         }
+
+        foreach (var _ in BeastsDatabase.HarvestMemoryBeasts.Where(beast => entity.Metadata == beast.Path))
+        {
+            _trackedHarvestMemoryBeasts.Add(entity.Id, entity);
+        }
     }
 
     public override void EntityRemoved(Entity entity)
@@ -46,6 +53,11 @@ public partial class Beasts : BaseSettingsPlugin<BeastsSettings>
         if (_trackedBeasts.ContainsKey(entity.Id))
         {
             _trackedBeasts.Remove(entity.Id);
+        }
+
+        if (_trackedHarvestMemoryBeasts.ContainsKey(entity.Id))
+        {
+            _trackedHarvestMemoryBeasts.Remove(entity.Id);
         }
     }
 }

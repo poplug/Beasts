@@ -17,17 +17,57 @@ public partial class Beasts
 {
     public override void Render()
     {
+        DrawInGameBeasts();
+        DrawInGameHarvestMemoryBeasts();
+        DrawBestiaryPanel();
+        DrawBeastsWindow();
+    }
+
+    private void DrawInGameBeasts()
+    {
         foreach (var positioned in _trackedBeasts
                      .Select(beast => beast.Value.GetComponent<Positioned>())
                      .Where(positioned => positioned != null))
         {
             DrawFilledCircleInWorldPosition(
-                GameController.IngameState.Data.ToWorldWithTerrainHeight(positioned.GridPosition), 50
+                GameController.IngameState.Data.ToWorldWithTerrainHeight(positioned.GridPosition), 50, Color.Red
             );
         }
+    }
 
-        DrawBestiaryPanel();
-        DrawBeastsWindow();
+    private void DrawInGameHarvestMemoryBeasts()
+    {
+        foreach (var trackedBeast in _trackedHarvestMemoryBeasts
+                     .Select(beast => new { Positioned = beast.Value.GetComponent<Positioned>(), beast.Value.Metadata })
+                     .Where(beast => beast.Positioned != null))
+        {
+            var beast = BeastsDatabase.HarvestMemoryBeasts.Where(beast => trackedBeast.Metadata == beast.Path).First();
+
+            var pos = GameController.IngameState.Data.ToWorldWithTerrainHeight(trackedBeast.Positioned.GridPosition);
+            Graphics.DrawText(beast.DisplayName, GameController.IngameState.Camera.WorldToScreen(pos), Color.White, FontAlign.Center);
+
+            DrawFilledCircleInWorldPosition(pos, 50, GetHarvestMemoryBeastColor(beast.DisplayName));
+        }
+    }
+
+    private Color GetHarvestMemoryBeastColor(string beastName)
+    {
+        if (beastName.Contains("Vivid"))
+        {
+            return new Color(255, 250, 0);
+        }
+
+        if (beastName.Contains("Wild"))
+        {
+            return new Color(255, 0, 235);
+        }
+
+        if (beastName.Contains("Primal"))
+        {
+            return new Color(0, 245, 255);
+        }
+
+        return Color.Red;
     }
 
     private void DrawBestiaryPanel()
@@ -96,7 +136,7 @@ public partial class Beasts
         ImGui.End();
     }
 
-    private void DrawFilledCircleInWorldPosition(Vector3 position, float radius)
+    private void DrawFilledCircleInWorldPosition(Vector3 position, float radius, Color color)
     {
         var circlePoints = new List<Vector2>();
         const int segments = 15;
@@ -115,8 +155,7 @@ public partial class Beasts
             circlePoints.Add(GameController.Game.IngameState.Camera.WorldToScreen(nextWorldPos));
         }
 
-        Graphics.DrawConvexPolyFilled(circlePoints.ToArray(),
-            Color.Red with { A = Color.ToByte((int)((double)0.2f * byte.MaxValue)) });
-        Graphics.DrawPolyLine(circlePoints.ToArray(), Color.Red, 2);
+        Graphics.DrawConvexPolyFilled(circlePoints.ToArray(), color with { A = Color.ToByte((int)((double)0.2f * byte.MaxValue)) });
+        Graphics.DrawPolyLine(circlePoints.ToArray(), color, 2);
     }
 }

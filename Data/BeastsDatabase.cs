@@ -472,4 +472,81 @@ public static class BeastsDatabase
             ]
         }
     };
+
+    public static List<Beast> HarvestMemoryBeasts = new()
+    {
+        new Beast
+        {
+            DisplayName = "Vivid Watcher",
+            Path = "Metadata/Monsters/LeagueHarvest/Green/HarvestSquidT3MemoryLine_",
+            Crafts =
+            ["Transform an Item: Reroll an Awakened Support Gem"]
+        },
+        new Beast
+        {
+            DisplayName = "Vivid Vulture",
+            Path = "Metadata/Monsters/LeagueHarvest/Green/HarvestVultureParasiteT3MemoryLine",
+            Crafts = ["Transform an Item: Reroll a Synthesis Implicit Modifier"]
+        },
+        new Beast
+        {
+            DisplayName = "Vivid Abberarach",
+            Path = "Metadata/Monsters/LeagueHarvest/Green/HarvestPlatedScorpionT3MemoryLine",
+            Crafts = ["Create an Item: Shaper Guardian, Elder Guardian or Conqueror Map"]
+        },
+        new Beast
+        {
+            DisplayName = "Wild Brambleback",
+            Path = "Metadata/Monsters/LeagueHarvest/Red/HarvestBrambleHulkT3MemoryLine",
+            Crafts =
+            [
+                "Transform an Item: Increase level of non-Corrupted Awakened Gem by 1"
+            ]
+        },
+        new Beast
+        {
+            DisplayName = "Wild Hellion Alpha",
+            Path = "Metadata/Monsters/LeagueHarvest/Red/HarvestHellionT3MemoryLine",
+            Crafts =
+            [
+                "Modify Mods on an Item: Reroll a Watcher's Eye Modifier"
+            ]
+        },
+        new Beast
+        {
+            DisplayName = "Wild Bristle Matron",
+            Path = "Metadata/Monsters/LeagueHarvest/Red/HarvestBeastT3MemoryLine_",
+            Crafts =
+            [
+                "Modify Mods on an Item: Add a crafted Meta-modifier to a non-Unique Item"
+            ]
+        },
+        new Beast
+        {
+            DisplayName = "Primal Crushclaw",
+            Path = "Metadata/Monsters/LeagueHarvest/Blue/HarvestNessaCrabT3MemoryLine_",
+            Crafts =
+            [
+                "Gain Atlas Crafts: Gain a free use of each Map Crafting Option"
+            ]
+        },
+        new Beast
+        {
+            DisplayName = "Primal Cystcaller",
+            Path = "Metadata/Monsters/LeagueHarvest/Blue/HarvestGoatmanT3MemoryLine",
+            Crafts =
+            [
+                "Gain Atlas Crafts: Gain one of each Atlas Mission"
+            ]
+        },
+        new Beast
+        {
+            DisplayName = "Primal Rhex Matriarch",
+            Path = "Metadata/Monsters/LeagueHarvest/Blue/HarvestRhexT3MemoryLine",
+            Crafts =
+            [
+                "Create an Item: Synthesis Unique Map"
+            ]
+        },
+    };
 }
