@@ -473,7 +473,7 @@ public static class BeastsDatabase
         }
     };
 
-    public static List<Beast> HarvestMemoryBeasts = new()
+    public static List<Beast> SpecialBeasts = new()
     {
         new Beast
         {
@@ -546,6 +546,22 @@ public static class BeastsDatabase
             Crafts =
             [
                 "Create an Item: Synthesis Unique Map"
+            ]
+        },
+        new Beast
+        {
+            DisplayName = "Black Mórrigan",
+            Path = "Metadata/Monsters/LeagueAzmeri/GullGoliathBestiary_",
+            Crafts =
+            [
+                "Craft an Aspect Skill onto an Item: Level 30 Aspect of the Cat skill",
+                "Craft an Aspect Skill onto an Item: Level 30 Aspect of the Avian skill",
+                "Craft an Aspect Skill onto an Item: Level 30 Aspect of the Spider skill",
+                "Craft an Aspect Skill onto an Item: Level 30 Aspect of the Crab skill",
+                "Apply a Hinekora's Lock: To a Magic Item",
+                "Split an Item: Into Three Items, with Two Mods on Each Item - Does not work on Influenced or Split items",
+                "Modify an Item: to Have Maximum Possible Links",
+                "Modify an Item: to Have Maximum Possible Number of Sockets",
             ]
         },
     };

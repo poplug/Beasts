@@ -18,7 +18,7 @@ public partial class Beasts
     public override void Render()
     {
         DrawInGameBeasts();
-        DrawInGameHarvestMemoryBeasts();
+        DrawInGameSpecialBeasts();
         DrawBestiaryPanel();
         DrawBeastsWindow();
     }
@@ -35,22 +35,22 @@ public partial class Beasts
         }
     }
 
-    private void DrawInGameHarvestMemoryBeasts()
+    private void DrawInGameSpecialBeasts()
     {
-        foreach (var trackedBeast in _trackedHarvestMemoryBeasts
+        foreach (var trackedBeast in _trackedSpecialBeasts
                      .Select(beast => new { Positioned = beast.Value.GetComponent<Positioned>(), beast.Value.Metadata })
                      .Where(beast => beast.Positioned != null))
         {
-            var beast = BeastsDatabase.HarvestMemoryBeasts.Where(beast => trackedBeast.Metadata == beast.Path).First();
+            var beast = BeastsDatabase.SpecialBeasts.Where(beast => trackedBeast.Metadata == beast.Path).First();
 
             var pos = GameController.IngameState.Data.ToWorldWithTerrainHeight(trackedBeast.Positioned.GridPosition);
             Graphics.DrawText(beast.DisplayName, GameController.IngameState.Camera.WorldToScreen(pos), Color.White, FontAlign.Center);
 
-            DrawFilledCircleInWorldPosition(pos, 50, GetHarvestMemoryBeastColor(beast.DisplayName));
+            DrawFilledCircleInWorldPosition(pos, 50, GetSpecialBeastColor(beast.DisplayName));
         }
     }
 
-    private Color GetHarvestMemoryBeastColor(string beastName)
+    private Color GetSpecialBeastColor(string beastName)
     {
         if (beastName.Contains("Vivid"))
         {
@@ -65,6 +65,10 @@ public partial class Beasts
         if (beastName.Contains("Primal"))
         {
             return new Color(0, 245, 255);
+        }
+
+        if (beastName.Contains("Black")) {
+            return new Color(255, 255, 255);
         }
 
         return Color.Red;
@@ -130,7 +134,7 @@ public partial class Beasts
                 }
             }
 
-            foreach (var beastMetadata in _trackedHarvestMemoryBeasts
+            foreach (var beastMetadata in _trackedSpecialBeasts
                 .Select(trackedBeast => trackedBeast.Value)
                 .Select(beast => BeastsDatabase.AllBeasts.Find(b => b.Path == beast.Metadata))
                 .Where(beastMetadata => beastMetadata != null))

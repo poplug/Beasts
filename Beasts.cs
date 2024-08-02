@@ -15,7 +15,7 @@ public partial class Beasts : BaseSettingsPlugin<BeastsSettings>
 {
     private Dictionary<BeastDisplayName, float> Prices { get; set; }
     private readonly Dictionary<long, Entity> _trackedBeasts = new();
-    private readonly Dictionary<long, Entity> _trackedHarvestMemoryBeasts = new();
+    private readonly Dictionary<long, Entity> _trackedSpecialBeasts = new();
 
     public override bool Initialise()
     {
@@ -31,7 +31,7 @@ public partial class Beasts : BaseSettingsPlugin<BeastsSettings>
     public override void AreaChange(AreaInstance area)
     {
         _trackedBeasts.Clear();
-        _trackedHarvestMemoryBeasts.Clear();
+        _trackedSpecialBeasts.Clear();
     }
 
     public override void EntityAdded(Entity entity)
@@ -42,9 +42,9 @@ public partial class Beasts : BaseSettingsPlugin<BeastsSettings>
             _trackedBeasts.Add(entity.Id, entity);
         }
 
-        foreach (var _ in BeastsDatabase.HarvestMemoryBeasts.Where(beast => entity.Metadata == beast.Path))
+        foreach (var _ in BeastsDatabase.SpecialBeasts.Where(beast => entity.Metadata == beast.Path))
         {
-            _trackedHarvestMemoryBeasts.Add(entity.Id, entity);
+            _trackedSpecialBeasts.Add(entity.Id, entity);
         }
     }
 
@@ -55,9 +55,9 @@ public partial class Beasts : BaseSettingsPlugin<BeastsSettings>
             _trackedBeasts.Remove(entity.Id);
         }
 
-        if (_trackedHarvestMemoryBeasts.ContainsKey(entity.Id))
+        if (_trackedSpecialBeasts.ContainsKey(entity.Id))
         {
-            _trackedHarvestMemoryBeasts.Remove(entity.Id);
+            _trackedSpecialBeasts.Remove(entity.Id);
         }
     }
 }
