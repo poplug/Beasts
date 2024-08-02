@@ -130,6 +130,28 @@ public partial class Beasts
                 }
             }
 
+            foreach (var beastMetadata in _trackedHarvestMemoryBeasts
+                .Select(trackedBeast => trackedBeast.Value)
+                .Select(beast => BeastsDatabase.AllBeasts.Find(b => b.Path == beast.Metadata))
+                .Where(beastMetadata => beastMetadata != null))
+            {
+                ImGui.TableNextRow();
+
+                ImGui.TableNextColumn();
+
+                ImGui.Text(Prices.TryGetValue(beastMetadata.DisplayName, out var price)
+                    ? $"{price.ToString(CultureInfo.InvariantCulture)}c"
+                    : "0c");
+
+                ImGui.TableNextColumn();
+
+                ImGui.Text(beastMetadata.DisplayName);
+                foreach (var craft in beastMetadata.Crafts)
+                {
+                    ImGui.Text(craft);
+                }
+            }
+
             ImGui.EndTable();
         }
 
