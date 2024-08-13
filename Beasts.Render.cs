@@ -137,7 +137,7 @@ public partial class Beasts
 
             foreach (var beastMetadata in _trackedSpecialBeasts
                 .Select(trackedBeast => trackedBeast.Value)
-                .Select(beast => BeastsDatabase.AllBeasts.Find(b => b.Path == beast.Metadata))
+                .Select(beast => BeastsDatabase.SpecialBeasts.Find(b => b.Path == beast.Metadata))
                 .Where(beastMetadata => beastMetadata != null))
             {
                 ImGui.TableNextRow();
