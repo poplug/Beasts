@@ -83,9 +83,10 @@ public partial class Beasts
         if (capturedBeastsPanel == null || capturedBeastsPanel.IsVisible == false) return;
 
         var beasts = bestiary.CapturedBeastsPanel.CapturedBeasts;
+        var allBeasts = BeastsDatabase.AllBeasts.Concat(BeastsDatabase.SpecialBeasts).ToList();
         foreach (var beast in beasts)
         {
-            var beastMetadata = BeastsDatabase.AllBeasts.Find(b => b.DisplayName == beast.DisplayName);
+            var beastMetadata = allBeasts.Find(b => b.DisplayName == beast.DisplayName);
             if (beastMetadata == null) continue;
             if (!Prices.ContainsKey(beastMetadata.DisplayName)) continue;
 
