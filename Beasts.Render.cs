@@ -18,30 +18,17 @@ public partial class Beasts
     public override void Render()
     {
         DrawInGameBeasts();
-        DrawInGameSpecialBeasts();
         DrawBestiaryPanel();
         DrawBeastsWindow();
     }
 
     private void DrawInGameBeasts()
     {
-        foreach (var positioned in _trackedBeasts
-                     .Select(beast => beast.Value.GetComponent<Positioned>())
-                     .Where(positioned => positioned != null))
-        {
-            DrawFilledCircleInWorldPosition(
-                GameController.IngameState.Data.ToWorldWithTerrainHeight(positioned.GridPosition), 50, Color.Red
-            );
-        }
-    }
-
-    private void DrawInGameSpecialBeasts()
-    {
         foreach (var trackedBeast in _trackedSpecialBeasts
                      .Select(beast => new { Positioned = beast.Value.GetComponent<Positioned>(), beast.Value.Metadata })
                      .Where(beast => beast.Positioned != null))
         {
-            var beast = BeastsDatabase.SpecialBeasts.Where(beast => trackedBeast.Metadata == beast.Path).First();
+            var beast = BeastsDatabase.AllBeasts.Where(beast => trackedBeast.Metadata == beast.Path).First();
 
             var pos = GameController.IngameState.Data.ToWorldWithTerrainHeight(trackedBeast.Positioned.GridPosition);
             Graphics.DrawText(beast.DisplayName, GameController.IngameState.Camera.WorldToScreen(pos), Color.White, FontAlign.Center);
@@ -67,7 +54,8 @@ public partial class Beasts
             return new Color(0, 245, 255);
         }
 
-        if (beastName.Contains("Black")) {
+        if (beastName.Contains("Black"))
+        {
             return new Color(255, 255, 255);
         }
 
@@ -83,10 +71,9 @@ public partial class Beasts
         if (capturedBeastsPanel == null || capturedBeastsPanel.IsVisible == false) return;
 
         var beasts = bestiary.CapturedBeastsPanel.CapturedBeasts;
-        var allBeasts = BeastsDatabase.AllBeasts.Concat(BeastsDatabase.SpecialBeasts).ToList();
         foreach (var beast in beasts)
         {
-            var beastMetadata = allBeasts.Find(b => b.DisplayName == beast.DisplayName);
+            var beastMetadata = BeastsDatabase.AllBeasts.Find(b => b.DisplayName == beast.DisplayName);
             if (beastMetadata == null) continue;
             if (!Prices.ContainsKey(beastMetadata.DisplayName)) continue;
 
@@ -134,29 +121,6 @@ public partial class Beasts
                     ImGui.Text(craft);
                 }
             }
-
-            foreach (var beastMetadata in _trackedSpecialBeasts
-                .Select(trackedBeast => trackedBeast.Value)
-                .Select(beast => BeastsDatabase.SpecialBeasts.Find(b => b.Path == beast.Metadata))
-                .Where(beastMetadata => beastMetadata != null))
-            {
-                ImGui.TableNextRow();
-
-                ImGui.TableNextColumn();
-
-                ImGui.Text(Prices.TryGetValue(beastMetadata.DisplayName, out var price)
-                    ? $"{price.ToString(CultureInfo.InvariantCulture)}c"
-                    : "0c");
-
-                ImGui.TableNextColumn();
-
-                ImGui.Text(beastMetadata.DisplayName);
-                foreach (var craft in beastMetadata.Crafts)
-                {
-                    ImGui.Text(craft);
-                }
-            }
-
             ImGui.EndTable();
         }
 
