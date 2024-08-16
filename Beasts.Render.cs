@@ -24,12 +24,13 @@ public partial class Beasts
 
     private void DrawInGameBeasts()
     {
-        foreach (var trackedBeast in _trackedSpecialBeasts
+        foreach (var trackedBeast in _trackedBeasts
                      .Select(beast => new { Positioned = beast.Value.GetComponent<Positioned>(), beast.Value.Metadata })
                      .Where(beast => beast.Positioned != null))
         {
             var beast = BeastsDatabase.AllBeasts.Where(beast => trackedBeast.Metadata == beast.Path).First();
 
+            if (!Settings.Beasts.Any(b => b.Path == beast.Path)) continue;
             var pos = GameController.IngameState.Data.ToWorldWithTerrainHeight(trackedBeast.Positioned.GridPosition);
             Graphics.DrawText(beast.DisplayName, GameController.IngameState.Camera.WorldToScreen(pos), Color.White, FontAlign.Center);
 
@@ -75,7 +76,7 @@ public partial class Beasts
         {
             var beastMetadata = BeastsDatabase.AllBeasts.Find(b => b.DisplayName == beast.DisplayName);
             if (beastMetadata == null) continue;
-            if (!Prices.ContainsKey(beastMetadata.DisplayName)) continue;
+            if (!Settings.BeastPrices.ContainsKey(beastMetadata.DisplayName)) continue;
 
             var center = new Vector2(beast.GetClientRect().Center.X, beast.GetClientRect().Center.Y);
 
@@ -83,7 +84,7 @@ public partial class Beasts
             Graphics.DrawFrame(beast.GetClientRect(), Color.White, 2);
             Graphics.DrawText(beastMetadata.DisplayName, center, Color.White, FontAlign.Center);
 
-            var text = Prices[beastMetadata.DisplayName].ToString(CultureInfo.InvariantCulture) + "c";
+            var text = Settings.BeastPrices[beastMetadata.DisplayName].ToString(CultureInfo.InvariantCulture) + "c";
             var textPos = center + new Vector2(0, 20);
             Graphics.DrawText(text, textPos, Color.White, FontAlign.Center);
         }
@@ -109,7 +110,7 @@ public partial class Beasts
 
                 ImGui.TableNextColumn();
 
-                ImGui.Text(Prices.TryGetValue(beastMetadata.DisplayName, out var price)
+                ImGui.Text(Settings.BeastPrices.TryGetValue(beastMetadata.DisplayName, out var price)
                     ? $"{price.ToString(CultureInfo.InvariantCulture)}c"
                     : "0c");
 
