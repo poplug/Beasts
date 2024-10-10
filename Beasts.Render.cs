@@ -74,7 +74,7 @@ public partial class Beasts
         var beasts = bestiary.CapturedBeastsPanel.CapturedBeasts;
         foreach (var beast in beasts)
         {
-            var beastMetadata = Settings.Beasts.Find(b => b.DisplayName == beast.DisplayName);
+            var beastMetadata = BeastsDatabase.AllBeasts.Find(b => b.DisplayName == beast.DisplayName);
             if (beastMetadata == null) continue;
             if (!Settings.BeastPrices.ContainsKey(beastMetadata.DisplayName)) continue;
 
@@ -103,7 +103,7 @@ public partial class Beasts
 
             foreach (var beastMetadata in _trackedBeasts
                          .Select(trackedBeast => trackedBeast.Value)
-                         .Select(beast => Settings.Beasts.Find(b => b.Path == beast.Metadata))
+                         .Select(beast => BeastsDatabase.AllBeasts.Find(b => b.Path == beast.Metadata))
                          .Where(beastMetadata => beastMetadata != null))
             {
                 ImGui.TableNextRow();
