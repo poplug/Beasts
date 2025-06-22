@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Forms;
 using Beasts.Data;
-using ExileCore.Shared.Attributes;
 using ExileCore.Shared.Helpers;
 using ExileCore.Shared.Interfaces;
 using ExileCore.Shared.Nodes;
@@ -15,7 +13,6 @@ namespace Beasts;
 
 public class BeastsSettings : ISettings
 {
-
     public List<Beast> Beasts { get; set; } = new();
     public Dictionary<string, float> BeastPrices { get; set; } = new();
     public DateTime LastUpdate { get; set; } = DateTime.MinValue;
@@ -27,7 +24,10 @@ public class BeastsSettings : ISettings
             DrawDelegate = () =>
             {
                 ImGui.Separator();
-                if (ImGui.BeginTable("BeastsTable", 4, ImGuiTableFlags.Resizable | ImGuiTableFlags.Reorderable | ImGuiTableFlags.Sortable | ImGuiTableFlags.RowBg | ImGuiTableFlags.BordersOuter | ImGuiTableFlags.BordersV | ImGuiTableFlags.NoBordersInBody | ImGuiTableFlags.ScrollY))
+                if (ImGui.BeginTable("BeastsTable", 4,
+                        ImGuiTableFlags.Resizable | ImGuiTableFlags.Reorderable | ImGuiTableFlags.Sortable |
+                        ImGuiTableFlags.RowBg | ImGuiTableFlags.BordersOuter | ImGuiTableFlags.BordersV |
+                        ImGuiTableFlags.NoBordersInBody | ImGuiTableFlags.ScrollY))
                 {
                     ImGui.TableSetupColumn("Enabled", ImGuiTableColumnFlags.WidthFixed, 24);
                     ImGui.TableSetupColumn("Price", ImGuiTableColumnFlags.WidthFixed, 48);
@@ -44,11 +44,21 @@ public class BeastsSettings : ISettings
 
                         sortedBeasts = sortedColumn switch
                         {
-                            0 => sortAscending ? [.. sortedBeasts.OrderBy(b => Beasts.Any(eb => eb.Path == b.Path))] : [.. sortedBeasts.OrderByDescending(b => Beasts.Any(eb => eb.Path == b.Path))],
-                            1 => sortAscending ? [.. sortedBeasts.OrderBy(b => BeastPrices[b.DisplayName])] : [.. sortedBeasts.OrderByDescending(b => BeastPrices[b.DisplayName])],
-                            2 => sortAscending ? [.. sortedBeasts.OrderBy(b => b.DisplayName)] : [.. sortedBeasts.OrderByDescending(x => x.DisplayName)],
-                            3 => sortAscending ? [.. sortedBeasts.OrderBy(b => b.Crafts[0])] : [.. sortedBeasts.OrderByDescending(x => x.Crafts[0])],
-                            _ => sortAscending ? [.. sortedBeasts.OrderBy(b => b.DisplayName)] : [.. sortedBeasts.OrderByDescending(x => x.DisplayName)]
+                            0 => sortAscending
+                                ? [.. sortedBeasts.OrderBy(b => Beasts.Any(eb => eb.Path == b.Path))]
+                                : [.. sortedBeasts.OrderByDescending(b => Beasts.Any(eb => eb.Path == b.Path))],
+                            1 => sortAscending
+                                ? [.. sortedBeasts.OrderBy(b => BeastPrices[b.DisplayName])]
+                                : [.. sortedBeasts.OrderByDescending(b => BeastPrices[b.DisplayName])],
+                            2 => sortAscending
+                                ? [.. sortedBeasts.OrderBy(b => b.DisplayName)]
+                                : [.. sortedBeasts.OrderByDescending(x => x.DisplayName)],
+                            3 => sortAscending
+                                ? [.. sortedBeasts.OrderBy(b => b.Crafts[0])]
+                                : [.. sortedBeasts.OrderByDescending(x => x.Crafts[0])],
+                            _ => sortAscending
+                                ? [.. sortedBeasts.OrderBy(b => b.DisplayName)]
+                                : [.. sortedBeasts.OrderByDescending(x => x.DisplayName)]
                         };
                     }
 
@@ -95,6 +105,7 @@ public class BeastsSettings : ISettings
 
                         ImGui.NextColumn();
                     }
+
                     ImGui.EndTable();
                 }
             }

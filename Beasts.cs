@@ -28,6 +28,7 @@ public partial class Beasts : BaseSettingsPlugin<BeastsSettings>
         {
             Settings.BeastPrices[beast.DisplayName] = prices.TryGetValue(beast.DisplayName, out var price) ? price : -1;
         }
+
         Settings.LastUpdate = DateTime.Now;
     }
 

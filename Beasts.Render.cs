@@ -32,7 +32,8 @@ public partial class Beasts
 
             if (!Settings.Beasts.Any(b => b.Path == beast.Path)) continue;
             var pos = GameController.IngameState.Data.ToWorldWithTerrainHeight(trackedBeast.Positioned.GridPosition);
-            Graphics.DrawText(beast.DisplayName, GameController.IngameState.Camera.WorldToScreen(pos), Color.White, FontAlign.Center);
+            Graphics.DrawText(beast.DisplayName, GameController.IngameState.Camera.WorldToScreen(pos), Color.White,
+                FontAlign.Center);
 
             DrawFilledCircleInWorldPosition(pos, 50, GetSpecialBeastColor(beast.DisplayName));
         }
@@ -96,7 +97,8 @@ public partial class Beasts
         ImGui.SetNextWindowBgAlpha(0.6f);
         ImGui.Begin("Beasts Window", ImGuiWindowFlags.NoDecoration);
 
-        if (ImGui.BeginTable("Beasts Table", 2, ImGuiTableFlags.RowBg | ImGuiTableFlags.BordersOuter | ImGuiTableFlags.BordersV))
+        if (ImGui.BeginTable("Beasts Table", 2,
+                ImGuiTableFlags.RowBg | ImGuiTableFlags.BordersOuter | ImGuiTableFlags.BordersV))
         {
             ImGui.TableSetupColumn("Price", ImGuiTableColumnFlags.WidthFixed, 48);
             ImGui.TableSetupColumn("Beast");
@@ -122,6 +124,7 @@ public partial class Beasts
                     ImGui.Text(craft);
                 }
             }
+
             ImGui.EndTable();
         }
 
@@ -147,7 +150,8 @@ public partial class Beasts
             circlePoints.Add(GameController.Game.IngameState.Camera.WorldToScreen(nextWorldPos));
         }
 
-        Graphics.DrawConvexPolyFilled(circlePoints.ToArray(), color with { A = Color.ToByte((int)((double)0.2f * byte.MaxValue)) });
+        Graphics.DrawConvexPolyFilled(circlePoints.ToArray(),
+            color with { A = Color.ToByte((int)((double)0.2f * byte.MaxValue)) });
         Graphics.DrawPolyLine(circlePoints.ToArray(), color, 2);
     }
 }
