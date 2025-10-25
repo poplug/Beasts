@@ -128,6 +128,8 @@ public class BeastsSettings : ISettings
     
     public ToggleNode ShowCapturedBeastsInInventory { get; set; } = new ToggleNode(true);
     
+    public ToggleNode ShowCapturedBeastsInStash { get; set; } = new ToggleNode(true);
+    
     public ToggleNode ShowBestiaryPanel { get; set; } = new ToggleNode(true);
 
     public ButtonNode FetchBeastPrices { get; set; } = new ButtonNode();

@@ -5,6 +5,7 @@ using System.Linq;
 using Beasts.Data;
 using Beasts.ExileCore;
 using ExileCore.PoEMemory.Components;
+using ExileCore.PoEMemory.Elements.InventoryElements;
 using ExileCore.Shared.Enums;
 using ImGuiNET;
 using SharpDX;
@@ -21,6 +22,7 @@ public partial class Beasts
         if (Settings.ShowBestiaryPanel.Value) DrawBestiaryPanel();
         if (Settings.ShowTrackedBeastsWindow.Value) DrawBeastsWindow();
         if (Settings.ShowCapturedBeastsInInventory.Value) DrawInventoryBeasts();
+        if (Settings.ShowCapturedBeastsInStash.Value) DrawStashBeasts();
     }
 
     private void DrawInGameBeasts()
@@ -144,7 +146,20 @@ public partial class Beasts
         var inventory = GameController.Game.IngameState.IngameUi.InventoryPanel[InventoryIndex.PlayerInventory];
         if (!inventory.IsVisible) return;
 
-        foreach (var item in inventory.VisibleInventoryItems)
+        DrawCapturedBeasts(inventory.VisibleInventoryItems);
+    }
+
+    private void DrawStashBeasts()
+    {
+        var stash = GameController.Game.IngameState.IngameUi.StashElement;
+        if (!stash.IsVisible) return;
+
+        DrawCapturedBeasts(stash.VisibleStash.VisibleInventoryItems);
+    }
+
+    private void DrawCapturedBeasts(IList<NormalInventoryItem> items)
+    {
+        foreach (var item in items)
         {
             if (item.Item.Metadata != "Metadata/Items/Currency/CurrencyItemisedCapturedMonster") continue;
 
