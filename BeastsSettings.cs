@@ -124,6 +124,12 @@ public class BeastsSettings : ISettings
 
     public ToggleNode Enable { get; set; } = new ToggleNode(false);
 
+    public ToggleNode ShowTrackedBeastsWindow { get; set; } = new ToggleNode(true);    
+    
+    public ToggleNode ShowCapturedBeastsInInventory { get; set; } = new ToggleNode(true);
+    
+    public ToggleNode ShowBestiaryPanel { get; set; } = new ToggleNode(true);
+
     public ButtonNode FetchBeastPrices { get; set; } = new ButtonNode();
 
     [JsonIgnore] public CustomNode LastUpdated { get; set; }

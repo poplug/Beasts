@@ -18,8 +18,9 @@ public partial class Beasts
     public override void Render()
     {
         DrawInGameBeasts();
-        DrawBestiaryPanel();
-        DrawBeastsWindow();
+        if (Settings.ShowBestiaryPanel.Value) DrawBestiaryPanel();
+        if (Settings.ShowTrackedBeastsWindow.Value) DrawBeastsWindow();
+        if (Settings.ShowCapturedBeastsInInventory.Value) DrawInventoryBeasts();
     }
 
     private void DrawInGameBeasts()
@@ -39,7 +40,7 @@ public partial class Beasts
         }
     }
 
-    private Color GetSpecialBeastColor(string beastName)
+    private static Color GetSpecialBeastColor(string beastName)
     {
         if (beastName.Contains("Vivid"))
         {
@@ -75,19 +76,26 @@ public partial class Beasts
         var beasts = bestiary.CapturedBeastsPanel.CapturedBeasts;
         foreach (var beast in beasts)
         {
-            var beastMetadata = Settings.Beasts.Find(b => b.DisplayName == beast.DisplayName);
-            if (beastMetadata == null) continue;
-            if (!Settings.BeastPrices.ContainsKey(beastMetadata.DisplayName)) continue;
+            try
+            {
+                var beastMetadata = Settings.Beasts.Find(b => b.DisplayName == beast.DisplayName);
+                if (beastMetadata == null) continue;
+                if (!Settings.BeastPrices.ContainsKey(beastMetadata.DisplayName)) continue;
 
-            var center = new Vector2(beast.GetClientRect().Center.X, beast.GetClientRect().Center.Y);
+                var center = new Vector2(beast.GetClientRect().Center.X, beast.GetClientRect().Center.Y);
 
-            Graphics.DrawBox(beast.GetClientRect(), new Color(0, 0, 0, 0.5f));
-            Graphics.DrawFrame(beast.GetClientRect(), Color.White, 2);
-            Graphics.DrawText(beastMetadata.DisplayName, center, Color.White, FontAlign.Center);
+                Graphics.DrawBox(beast.GetClientRect(), new Color(0, 0, 0, 0.5f));
+                Graphics.DrawFrame(beast.GetClientRect(), Color.White, 2);
+                Graphics.DrawText(beastMetadata.DisplayName, center, Color.White, FontAlign.Center);
 
-            var text = Settings.BeastPrices[beastMetadata.DisplayName].ToString(CultureInfo.InvariantCulture) + "c";
-            var textPos = center + new Vector2(0, 20);
-            Graphics.DrawText(text, textPos, Color.White, FontAlign.Center);
+                var text = Settings.BeastPrices[beastMetadata.DisplayName].ToString(CultureInfo.InvariantCulture) + "c";
+                var textPos = center + new Vector2(0, 20);
+                Graphics.DrawText(text, textPos, Color.White, FontAlign.Center);
+            }
+            catch (Exception e)
+            {
+                // ignored
+            }
         }
     }
 
@@ -129,6 +137,33 @@ public partial class Beasts
         }
 
         ImGui.End();
+    }
+
+    private void DrawInventoryBeasts()
+    {
+        var inventory = GameController.Game.IngameState.IngameUi.InventoryPanel[InventoryIndex.PlayerInventory];
+        if (!inventory.IsVisible) return;
+
+        foreach (var item in inventory.VisibleInventoryItems)
+        {
+            if (item.Item.Metadata != "Metadata/Items/Currency/CurrencyItemisedCapturedMonster") continue;
+
+            var itemRect = item.GetClientRect();
+
+            var monster = item.Item.GetComponent<CapturedMonster>();
+            if (Settings.BeastPrices.TryGetValue(monster.MonsterVariety.MonsterName, out var price))
+            {
+                Graphics.DrawBox(itemRect, new Color(0, 0, 0, 0.5f));
+                Graphics.DrawFrame(itemRect, new Color(255, 255, 255, 1f), 1);
+                Graphics.DrawText($"{price.ToString(CultureInfo.InvariantCulture)}c", itemRect.Center,
+                    FontAlign.Center);
+            }
+            else
+            {
+                Graphics.DrawBox(itemRect, new Color(255, 255, 0, 0.5f));
+                Graphics.DrawFrame(itemRect, new Color(255, 255, 0, 1f), 1);
+            }
+        }
     }
 
     private void DrawFilledCircleInWorldPosition(Vector3 position, float radius, Color color)
