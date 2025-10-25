@@ -28,9 +28,9 @@ public partial class Beasts
                      .Select(beast => new { Positioned = beast.Value.GetComponent<Positioned>(), beast.Value.Metadata })
                      .Where(beast => beast.Positioned != null))
         {
-            var beast = BeastsDatabase.AllBeasts.Where(beast => trackedBeast.Metadata == beast.Path).First();
+            var beast = BeastsDatabase.AllBeasts.First(beast => trackedBeast.Metadata == beast.Path);
 
-            if (!Settings.Beasts.Any(b => b.Path == beast.Path)) continue;
+            if (Settings.Beasts.All(b => b.Path != beast.Path)) continue;
             var pos = GameController.IngameState.Data.ToWorldWithTerrainHeight(trackedBeast.Positioned.GridPosition);
             Graphics.DrawText(beast.DisplayName, GameController.IngameState.Camera.WorldToScreen(pos), Color.White,
                 FontAlign.Center);
