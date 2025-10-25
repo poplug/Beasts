@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -152,21 +152,31 @@ public partial class Beasts
     private void DrawStashBeasts()
     {
         var stash = GameController.Game.IngameState.IngameUi.StashElement;
-        if (!stash.IsVisible) return;
+        if (stash == null || !stash.IsVisible) return;
 
-        DrawCapturedBeasts(stash.VisibleStash.VisibleInventoryItems);
+        var visibleStash = stash.VisibleStash;
+        if (visibleStash == null) return;
+
+        var items = visibleStash.VisibleInventoryItems;
+        if (items == null) return;
+
+        DrawCapturedBeasts(items);
     }
 
     private void DrawCapturedBeasts(IList<NormalInventoryItem> items)
     {
+        if (items == null || items.Count == 0) return;
+
         foreach (var item in items)
         {
+            if (item?.Item == null) continue;
             if (item.Item.Metadata != "Metadata/Items/Currency/CurrencyItemisedCapturedMonster") continue;
 
             var itemRect = item.GetClientRect();
-
             var monster = item.Item.GetComponent<CapturedMonster>();
-            if (Settings.BeastPrices.TryGetValue(monster.MonsterVariety.MonsterName, out var price))
+            var monsterName = monster?.MonsterVariety?.MonsterName;
+
+            if (!string.IsNullOrEmpty(monsterName) && Settings.BeastPrices.TryGetValue(monsterName, out var price))
             {
                 Graphics.DrawBox(itemRect, new Color(0, 0, 0, 0.5f));
                 Graphics.DrawFrame(itemRect, new Color(255, 255, 255, 1f), 1);
