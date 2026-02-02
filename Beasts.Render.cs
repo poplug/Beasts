@@ -28,12 +28,13 @@ public partial class Beasts
     private void DrawInGameBeasts()
     {
         foreach (var trackedBeast in _trackedBeasts
-                     .Select(beast => new { Positioned = beast.Value.GetComponent<Positioned>(), beast.Value.Metadata })
-                     .Where(beast => beast.Positioned != null))
+                     .Select(beast => new { Positioned = beast.Value.GetComponent<Positioned>(), beast.Value.Metadata, beast.Value.Buffs })
+                     .Where(beast => beast.Positioned != null)
+                     .Where(beast => beast.Buffs.Find(b => b.Name == "capture_monster_trapped") == null))
         {
-            var beast = BeastsDatabase.AllBeasts.First(beast => trackedBeast.Metadata == beast.Path);
+            var beast = BeastsDatabase.AllBeasts.FirstOrDefault(b => trackedBeast.Metadata == b.Path);
+            if (beast == null || Settings.Beasts.All(b => b.Path != beast.Path)) continue;
 
-            if (Settings.Beasts.All(b => b.Path != beast.Path)) continue;
             var pos = GameController.IngameState.Data.ToWorldWithTerrainHeight(trackedBeast.Positioned.GridPosition);
             Graphics.DrawText(beast.DisplayName, GameController.IngameState.Camera.WorldToScreen(pos), Color.White,
                 FontAlign.Center);
@@ -113,23 +114,26 @@ public partial class Beasts
             ImGui.TableSetupColumn("Price", ImGuiTableColumnFlags.WidthFixed, 48);
             ImGui.TableSetupColumn("Beast");
 
-            foreach (var beastMetadata in _trackedBeasts
-                         .Select(trackedBeast => trackedBeast.Value)
-                         .Select(beast => Settings.Beasts.Find(b => b.Path == beast.Metadata))
-                         .Where(beastMetadata => beastMetadata != null))
+            foreach (var trackedBeast in _trackedBeasts
+                         .Select(beast => new { beast.Value.Metadata, beast.Value.Buffs })
+                         .Where(beast => beast.Metadata != null)
+                         .Where(beast => beast.Buffs?.Find(b => b.Name == "capture_monster_trapped") == null))
             {
+                var beast = Settings.Beasts.Find(b => b.Path == trackedBeast.Metadata);
+                if (beast == null) continue;
+
                 ImGui.TableNextRow();
 
                 ImGui.TableNextColumn();
 
-                ImGui.Text(Settings.BeastPrices.TryGetValue(beastMetadata.DisplayName, out var price)
+                ImGui.Text(Settings.BeastPrices.TryGetValue(beast.DisplayName, out var price)
                     ? $"{price.ToString(CultureInfo.InvariantCulture)}c"
                     : "0c");
 
                 ImGui.TableNextColumn();
 
-                ImGui.Text(beastMetadata.DisplayName);
-                foreach (var craft in beastMetadata.Crafts)
+                ImGui.Text(beast.DisplayName);
+                foreach (var craft in beast.Crafts)
                 {
                     ImGui.Text(craft);
                 }
